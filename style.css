@@ -1,0 +1,873 @@
+/* ========================================
+   ТЕМНАЯ ТЕМА
+   ======================================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary: #d250e6;     /* Фиолетовый акцентный цвет */
+  --background: #000;     /* Черный фон */
+  --card-bg: #0a0a0a;    /* Фон карточек */
+  --border-color: #1a1a1a; /* Цвет рамок */
+  --text: #f8f9ff;        /* Основной текст */
+  --text-secondary: #a7a7a7; /* Второстепенный текст */
+  --transition: all 0.3s ease;
+  --navbar-height: 70px;  /* Высота навбара */
+}
+
+/* ========================================
+   БАЗА, ШРИФТ
+   ======================================== */
+
+body {
+  background: #000;
+  color: var(--text);
+  font-family: 'Sofia Sans', sans-serif;
+  line-height: 1.3;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ========================================
+   MENU
+   ======================================== */
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--navbar-height);
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  padding: 0 2rem;
+  z-index: 1000;
+  transition: var(--transition);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.navbar.scrolled {
+  background: rgba(0, 0, 0, 0.98);
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.7);
+}
+
+.navbar-container {
+  max-width: 1050px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-logo {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.navbar-logo i {
+  color: var(--primary);
+  font-size: 1.8rem;
+}
+
+.navbar-menu {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
+}
+
+.navbar-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.05rem;
+  padding: 0.5rem 0;
+  position: relative;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.navbar-link i {
+  font-size: 0.9rem;
+  width: 16px;
+  text-align: center;
+}
+
+.navbar-link:hover,
+.navbar-link.active {
+  color: var(--primary);
+}
+
+.navbar-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--primary);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.navbar-link:hover::after,
+.navbar-link.active::after {
+  width: 100%;
+}
+
+.navbar-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+/* ========================================
+   BOTTOM UP UP
+   ======================================== */
+
+.scroll-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--card-bg);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: var(--transition);
+  z-index: 999;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border-color);
+}
+
+.scroll-to-top.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scroll-to-top:hover {
+  background: var(--primary);
+  color: white;
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 6px 25px rgba(210, 80, 230, 0.7);
+  border-color: transparent;
+}
+
+/* ========================================
+   ШИРИНА ВИЗИТКИ
+   ======================================== */
+
+.container {
+  max-width: 1111px;
+  margin: 0 auto;
+  padding: calc(1.5rem + var(--navbar-height)) 1.5rem 1.5rem;
+  margin-top: var(--navbar-height);
+}
+
+/* ========================================
+   ABOUT ME
+   ======================================== */
+.hero {
+  text-align: center;
+  margin-bottom: 3.5rem;
+  padding: 2rem 1rem;
+}
+
+.avatar-container {
+  width: 280px;
+  height: 280px;
+  margin: 0 auto 1.8rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+#profile-pic {
+  border-radius: 50%;
+  border: 3px solid var(--primary);
+  box-shadow: 0 0 30px rgba(210, 80, 230, 0.5);
+  object-fit: cover;
+  height: 310px;
+  display: block;
+  transition: var(--transition);
+}
+
+#profile-pic:hover {
+  box-shadow: 0 0 40px rgba(210, 80, 230, 0.8);
+  transform: scale(1.02);
+}
+
+h1 {
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 1.2rem;
+  background: linear-gradient(90deg, var(--text), #ccc);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: -0.5px;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+
+/* ========================================
+   ОБЩИЙ СТИЛЬ БЛОКОВ МЕНЮ
+   ======================================== */
+.section {
+  margin-bottom: 3rem;
+}
+
+.section.contacts {
+  margin-bottom: 1.5rem;
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: var(--text);
+  position: relative;
+  display: inline-block;
+}
+
+h2::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 50px;
+  height: 3px;
+  background: var(--primary);
+  border-radius: 3px;
+}
+
+p {
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+  line-height: 1.3;
+}
+
+/* ========================================
+   БЛОК SKILS | HOBBI
+   ======================================== */
+.skills-grid,
+.hobbies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.8rem;
+  margin-top: 1rem;
+}
+
+/* ========================================
+   СТИЛЬ ДЛЯ КАРТОЧЕК
+   ======================================== */
+.card,
+.experience-item {
+  background: #000000;
+  border: 1px solid var(--text-secondary);
+  border-radius: 30px;
+  padding: 1.1rem;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.card::before,
+.experience-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, transparent 45%, rgba(210, 80, 230, 0.08) 55%, transparent 65%);
+  transform: translateX(-100%);
+  transition: transform 0.8s ease;
+  z-index: 0;
+  opacity: 0.7;
+}
+
+.card:hover::before,
+.experience-item:hover::before {
+  transform: translateX(100%);
+}
+
+.card:hover,
+.experience-item:hover {
+  transform: translateY(-5px);
+  border-color: var(--primary);
+  box-shadow: 0 8px 30px rgba(210, 80, 230, 0.35);
+}
+
+.card *:not(i),
+.experience-item *:not(i) {
+  position: relative;
+  z-index: 1;
+}
+
+.card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.8rem;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.card h3 i {
+  color: var(--primary);
+  font-size: 1.4rem;
+}
+
+.card p,
+.tool-list > div {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.3;
+}
+
+.tool-list > div {
+  margin-bottom: 0.6rem;
+  padding-left: 1.2rem;
+  position: relative;
+}
+
+.tool-list > div::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--primary);
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.tool-list > div:last-child {
+  margin-bottom: 0;
+}
+
+/* ========================================
+   БЛОК EXP
+   ======================================== */
+.experience-item {
+  margin-bottom: 1.8rem;
+  padding: 1rem;
+}
+
+.exp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.exp-header h3 {
+  font-size: 1.5rem;
+  color: var(--text);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.exp-header h3 i {
+  color: var(--primary);
+  font-size: 1.6rem;
+}
+
+.exp-date {
+  color: var(--primary);
+  font-weight: 500;
+  font-size: 1.1rem;
+  background: rgba(210, 80, 230, 0.1);
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+/* ========================================
+   БЛОК CONTACTS
+   ======================================== */
+.contact-links {
+  display: flex;
+  gap: 20px;
+  margin-top: 25px;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 45px 0 15px;
+  position: relative;
+  z-index: 10;
+}
+
+.contact-item-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.contact-item {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--card-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  font-size: 2rem;
+  transition: var(--transition);
+  cursor: pointer;
+  text-decoration: none;
+  position: relative;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  z-index: 5;
+  border: 1px solid var(--border-color);
+}
+
+.contact-item:hover {
+  background: var(--primary);
+  color: white;
+  transform: translateY(-4px) scale(1.1);
+  box-shadow: 0 6px 25px rgba(210, 80, 230, 0.7);
+  border-color: transparent;
+}
+
+.tooltip {
+  position: absolute;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-10px);
+  background: var(--card-bg);
+  color: var(--text);
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--transition), opacity 0.3s ease 0.2s;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+  z-index: 100;
+  pointer-events: none;
+  max-width: 280px;
+  text-align: center;
+  font-weight: 500;
+  border: 1px solid var(--border-color);
+}
+
+.tooltip::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid var(--card-bg);
+}
+
+.contact-item-wrapper:hover .tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ========================================
+   ПОДСВЕТКА
+   ======================================== */
+.bottom-banner {
+  width: 100%;
+  background: #000;
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0;
+  border-top: 1px solid #000;
+}
+
+.bottom-banner img {
+  width: 100%;
+  max-width: 1200px;
+  height: auto;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.7;
+  transition: var(--transition);
+}
+
+.bottom-banner img:hover {
+  opacity: 1;
+}
+
+.site-footer {
+  margin-top: auto;
+  padding: 1.5rem 0;
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  border-top: 1px solid #000;
+}
+
+/* ========================================
+   MESSAGE - CONTACTS
+   ======================================== */
+.copy-notification {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  padding: 14px 25px;
+  border-radius: 12px;
+  color: white;
+  font-family: 'Sofia Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  z-index: 10000;
+  opacity: 0;
+  transform: translateY(25px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  background: linear-gradient(90deg, var(--primary), #a030c0);
+  box-shadow: 0 6px 25px rgba(210, 80, 230, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.copy-notification[data-type="error"] {
+  background: linear-gradient(90deg, #ff4d4d, #cc0000);
+  box-shadow: 0 6px 25px rgba(255, 77, 77, 0.4);
+}
+
+.copy-notification.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ========================================
+   ВО СЛАВУ GPT, Адаптивность размера экрана, через @ изменяет базовые стили
+   ======================================== */
+@media (max-width: 1024px) {
+  :root {
+    --navbar-height: 65px;
+  }
+  
+  .navbar {
+    padding: 0 1.5rem;
+  }
+  
+  .navbar-menu {
+    gap: 1.5rem;
+  }
+  
+  .navbar-link {
+    font-size: 1rem;
+  }
+  
+  .container {
+    padding: calc(1.5rem + var(--navbar-height)) 1.2rem 1.5rem;
+  }
+  
+  h1 {
+    font-size: 2.4rem;
+  }
+  
+  h2 {
+    font-size: 1.8rem;
+  }
+  
+  .contact-links {
+    gap: 30px;
+    padding: 60px 0 15px;
+  }
+  
+  .contact-item {
+    width: 60px;
+    height: 60px;
+    font-size: 2rem;
+  }
+  
+  .tooltip {
+    font-size: 0.9rem;
+    padding: 7px 14px;
+  }
+  
+  .skills-grid,
+  .hobbies-grid {
+    gap: 1.5rem;
+  }
+  
+  .card,
+  .experience-item {
+    padding: 1.1rem;
+  }
+  
+  .section {
+    margin-bottom: 2.5rem;
+  }
+}
+
+/* ========================================
+   ВО СЛАВУ GPT, Адаптивность для мобилок, через @ изменяет базовые стили
+   ======================================== */
+@media (max-width: 768px) {
+  :root {
+    --navbar-height: 60px;
+  }
+  
+  .navbar-toggle {
+    display: block;
+  }
+  
+  .navbar-menu {
+    position: fixed;
+    top: var(--navbar-height);
+    right: -100%;
+    width: 280px;
+    height: calc(100vh - var(--navbar-height));
+    background: rgba(10, 10, 10, 0.97);
+    backdrop-filter: blur(10px);
+    flex-direction: column;
+    padding: 2rem 0;
+    transition: right 0.4s ease;
+    border-left: 1px solid var(--border-color);
+    box-shadow: -5px 0 25px rgba(0, 0, 0, 0.5);
+  }
+  
+  .navbar-menu.active {
+    right: 0;
+  }
+  
+  .navbar-menu li {
+    width: 100%;
+    padding: 0 2rem;
+  }
+  
+  .navbar-link {
+    width: 100%;
+    padding: 1rem 0;
+    font-size: 1.2rem;
+    justify-content: flex-start;
+  }
+  
+  .navbar-link i {
+    font-size: 1.1rem;
+    width: 20px;
+  }
+  
+  .hero {
+    padding: 1.5rem 0.5rem;
+    margin-bottom: 2.5rem;
+  }
+  
+  .avatar-container {
+    width: 240px;
+    height: 240px;
+    margin-bottom: 1.5rem;
+  }
+  
+  #profile-pic {
+    height: 270px;
+  }
+  
+  h1 {
+    font-size: 2.1rem;
+  }
+  
+  h2::after {
+    width: 40px;
+    bottom: -6px;
+  }
+  
+  .skills-grid,
+  .hobbies-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .card,
+  .experience-item {
+    padding: 1.5rem;
+  }
+  
+  .exp-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .section {
+    margin-bottom: 2.5rem;
+  }
+  
+  .section.contacts {
+    margin-bottom: 1rem;
+  }
+  
+  .contact-links {
+    padding: 15px 0 60px;
+    gap: 18px;
+  }
+  
+  .tooltip {
+    top: auto;
+    bottom: -60px;
+    transform: translateX(-50%) translateY(10px);
+    font-size: 0.88rem;
+    padding: 7px 14px;
+    white-space: nowrap;
+    max-width: 90vw;
+    left: 50%;
+    text-align: center;
+  }
+  
+  .tooltip::after {
+    top: -8px;
+    bottom: auto;
+    border-top: none;
+    border-bottom: 8px solid var(--card-bg);
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+  }
+  
+  .contact-item-wrapper:hover .tooltip {
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* ========================================
+   ВО СЛАВУ GPT, Адаптивность для мобилок v2, через @ изменяет базовые стили
+   ======================================== */
+@media (max-width: 480px) {
+  :root {
+    --navbar-height: 55px;
+  }
+  
+  .navbar {
+    padding: 0 1rem;
+  }
+  
+  .navbar-logo {
+    font-size: 1.4rem;
+  }
+  
+  .navbar-logo i {
+    font-size: 1.6rem;
+  }
+  
+  .container {
+    padding: calc(1.2rem + var(--navbar-height)) 1rem 1.2rem;
+  }
+  
+  .hero {
+    padding: 1.2rem 0.5rem;
+  }
+  
+  .avatar-container {
+    width: 220px;
+    height: 220px;
+    margin-bottom: 1.2rem;
+  }
+  
+  #profile-pic {
+    height: 220px;
+    border-width: 2px;
+  }
+  
+  h1 {
+    font-size: 1.9rem;
+  }
+  
+  .subtitle {
+    font-size: 1.05rem;
+  }
+  
+  h2 {
+    font-size: 1.7rem;
+  }
+  
+  .contact-links {
+    gap: 16px;
+    padding: 15px 0 55px;
+  }
+  
+  .contact-item {
+    width: 44px;
+    height: 44px;
+    font-size: 1.15rem;
+  }
+  
+  .tooltip {
+    bottom: -55px;
+    font-size: 0.85rem;
+    padding: 6px 12px;
+    max-width: 88vw;
+  }
+  
+  .tooltip::after {
+    top: -7px;
+    border-bottom-width: 7px;
+  }
+  
+  .card,
+  .experience-item {
+    padding: 1.3rem;
+  }
+  
+  .card h3 {
+    font-size: 1.2rem;
+  }
+  
+  .exp-header h3 {
+    font-size: 1.4rem;
+  }
+  
+  .exp-date {
+    font-size: 1rem;
+    padding: 0.2rem 0.7rem;
+  }
+  
+  .scroll-to-top {
+    width: 45px;
+    height: 45px;
+    font-size: 1.2rem;
+    bottom: 20px;
+    right: 20px;
+  }
+  
+  .section {
+    margin-bottom: 2rem;
+  }
+}
