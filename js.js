@@ -1,172 +1,156 @@
-// ========================================
-// ГЛАВНАЯ ФУНКЦИЯ ИНИЦИАЛИЗАЦИИ
-// ========================================
-
 (function () {
   'use strict';
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
-
-  function init() {
+  const init = () => {
+    // Получаем элементы DOM
     const navbar = document.querySelector('.navbar');
-    const navbarToggle = document.getElementById('navbarToggle');
-    const navbarMenu = document.getElementById('navbarMenu');
-    const scrollToTopBtn = document.getElementById('scrollToTop');
-    const contactLinks = document.querySelector('.contact-links');
+    const toggle = document.getElementById('navbarToggle');
+    const menu = document.getElementById('navbarMenu');
+    const topBtn = document.getElementById('scrollToTop');
+    const contacts = document.querySelector('.contact-links');
+    const links = document.querySelectorAll('.navbar-link');
 
-    if (!navbar || !navbarToggle || !navbarMenu || !scrollToTopBtn) {
-      console.warn('⚠️ Ключевые элементы не найдены. Проверьте HTML.');
-      return;
-    }
+    // Проверка наличия критичных элементов
+    if (!navbar || !toggle || !menu || !topBtn) return;
 
-    const navbarLinks = document.querySelectorAll('.navbar-link');
+    // ==================== Мобильное меню ====================
+    
+    // Функция обновления иконки меню
+    const updateMenuIcon = isOpen => toggle.innerHTML = isOpen 
+      ? '<i class="fas fa-times"></i>' 
+      : '<i class="fas fa-bars"></i>';
 
-    // ========================================
-    // Мобильное меню
-    // ========================================
-
-    navbarToggle.addEventListener('click', () => {
-      navbarMenu.classList.toggle('active');
-      const isMenuOpen = navbarMenu.classList.contains('active');
-      navbarToggle.innerHTML = isMenuOpen 
-        ? '<i class="fas fa-times"></i>' 
-        : '<i class="fas fa-bars"></i>';
+    // Переключение меню по клику на кнопку
+    toggle.addEventListener('click', () => {
+      menu.classList.toggle('active');
+      updateMenuIcon(menu.classList.contains('active'));
     });
 
-    navbarLinks.forEach(link => {
+    // Закрытие меню при клике на ссылку
+    links.forEach(link => {
       link.addEventListener('click', () => {
-        if (navbarMenu.classList.contains('active')) {
-          navbarMenu.classList.remove('active');
-          navbarToggle.innerHTML = '<i class="fas fa-bars"></i>';
+        if (menu.classList.contains('active')) {
+          menu.classList.remove('active');
+          updateMenuIcon(false);
         }
       });
     });
 
-    // ========================================
-    // Прокрутка
-    // ========================================
-
+    // ==================== Обработка прокрутки ====================
+    
     let ticking = false;
+    
+    // Функция обработки прокрутки страницы
+    const handleScroll = () => {
+      // Добавляем/убираем класс 'scrolled' при прокрутке
+      navbar.classList.toggle('scrolled', window.scrollY > 50);
+      // Показываем/скрываем кнопку "вверх"
+      topBtn.classList.toggle('show', window.scrollY > 300);
+
+      // Определяем текущую секцию для активной ссылки
+      const scrollPos = window.scrollY + 100;
+      document.querySelectorAll('.section').forEach(section => {
+        const id = section.id;
+        // Проверяем, находится ли секция в зоне видимости
+        if (scrollPos >= section.offsetTop && scrollPos < section.offsetTop + section.offsetHeight) {
+          // Активируем соответствующую ссылку в меню
+          links.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+          });
+        }
+      });
+    };
+
+    // Оптимизированный обработчик прокрутки (с использованием requestAnimationFrame)
     window.addEventListener('scroll', () => {
       if (!ticking) {
         requestAnimationFrame(() => {
-          handleScroll(navbar, scrollToTopBtn, navbarLinks);
+          handleScroll();
           ticking = false;
         });
         ticking = true;
       }
     });
 
-    function handleScroll(navbar, scrollToTopBtn, links) {
-      navbar.classList.toggle('scrolled', window.scrollY > 50);
-      scrollToTopBtn.classList.toggle('show', window.scrollY > 300);
+    // ==================== Плавная прокрутка ====================
+    
+    // Универсальная функция прокрутки к элементу
+    const scrollTo = (element, offset = 0) => {
+      window.scrollTo({ top: element.offsetTop - offset, behavior: 'smooth' });
+    };
 
-      const sections = document.querySelectorAll('.section');
-      const scrollPos = window.scrollY + 100;
-
-      sections.forEach(section => {
-        const id = section.getAttribute('id');
-        if (scrollPos >= section.offsetTop && scrollPos < section.offsetTop + section.offsetHeight) {
-          links.forEach(link => {
-            link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
-          });
-        }
-      });
-    }
-
-    // ========================================
-    // Плавная прокрутка
-    // ========================================
-
-    navbarLinks.forEach(link => {
-      link.addEventListener('click', (e) => {
+    // Прокрутка к секции при клике на ссылку меню
+    links.forEach(link => {
+      link.addEventListener('click', e => {
         e.preventDefault();
-        const targetId = link.getAttribute('href');
-        const targetSection = document.querySelector(targetId);
-        if (targetSection) {
-          const offset = targetSection.offsetTop - 80;
-          window.scrollTo({ top: offset, behavior: 'smooth' });
-        }
+        const target = document.querySelector(link.getAttribute('href'));
+        if (target) scrollTo(target, 80);
       });
     });
 
-    scrollToTopBtn.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+    // Прокрутка вверх при клике на кнопку
+    topBtn.addEventListener('click', () => scrollTo(document.documentElement));
 
-    // ========================================
-    // Копирование телефона
-    // ========================================
-
-    if (contactLinks) {
-      contactLinks.addEventListener('click', async (e) => {
+    // ==================== Копирование телефона ====================
+    
+    // Обработчик клика на контактные данные
+    if (contacts) {
+      contacts.addEventListener('click', async e => {
         const item = e.target.closest('.contact-item.copyable');
-        if (!item) return;
+        if (!item || !item.dataset.value) return;
 
         e.preventDefault();
-        const phone = item.dataset.value;
-        if (!phone) return;
-
         try {
-          await navigator.clipboard.writeText(phone);
-          showNotification('Номер телефона скопирован!');
-        } catch (err) {
-          fallbackCopyTextToClipboard(phone);
-          showNotification('Номер скопирован!');
+          // Копируем текст в буфер обмена
+          await navigator.clipboard.writeText(item.dataset.value);
+          showNotification('Скопировано!');
+        } catch {
+          // Резервный метод копирования для старых браузеров
+          fallbackCopy(item.dataset.value);
         }
       });
     }
 
-    function fallbackCopyTextToClipboard(text) {
-      const textArea = document.createElement('textarea');
-      textArea.value = text;
-      textArea.style.position = 'fixed';
-      textArea.style.left = '-9999px';
-      textArea.style.top = '-9999px';
-      document.body.appendChild(textArea);
-      textArea.focus();
-      textArea.select();
-      try {
-        document.execCommand('copy');
-      } catch (err) {
-        console.error('Не удалось скопировать:', err);
-      }
-      document.body.removeChild(textArea);
-    }
+    // Резервный метод копирования через создание временного элемента
+    const fallbackCopy = text => {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.cssText = 'position:fixed;left:-9999px;top:-9999px;';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+    };
 
-    // ========================================
-    // Уведомления
-    // ========================================
-
-    function showNotification(message, isError = false) {
+    // Показ уведомления о копировании
+    const showNotification = msg => {
+      // Удаляем предыдущее уведомление, если оно есть
       const existing = document.querySelector('.copy-notification');
       if (existing) existing.remove();
 
-      const notification = document.createElement('div');
-      notification.className = 'copy-notification';
-      notification.textContent = message;
-      notification.dataset.type = isError ? 'error' : 'success';
+      // Создаем новое уведомление
+      const notif = document.createElement('div');
+      notif.className = 'copy-notification';
+      notif.textContent = msg;
+      document.body.appendChild(notif);
       
-      document.body.appendChild(notification);
-      notification.classList.add('show');
-
+      // Показываем уведомление с задержкой
+      setTimeout(() => notif.classList.add('show'), 10);
+      // Скрываем и удаляем через 2.5 секунды
       setTimeout(() => {
-        notification.classList.remove('show');
-        notification.addEventListener('transitionend', () => notification.remove(), { once: true });
+        notif.classList.remove('show');
+        notif.addEventListener('transitionend', () => notif.remove(), { once: true });
       }, 2500);
-    }
+    };
 
-    // ========================================
-    // Анимация при прокрутке
-    // ========================================
-
+    // ==================== Анимация при прокрутке ====================
+    
+    // Функция анимации элементов при появлении в зоне видимости
     const animateOnScroll = () => {
-      const observer = new IntersectionObserver((entries) => {
+      // Создаем наблюдатель за видимостью элементов
+      const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
+          // Если элемент виден, убираем эффекты
           if (entry.isIntersecting) {
             entry.target.style.opacity = '1';
             entry.target.style.transform = 'translateY(0)';
@@ -174,46 +158,65 @@
         });
       }, { threshold: 0.1 });
 
-      document.querySelectorAll('.card, .experience-item, .section > h2, .section > p').forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(20px)';
-        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(el);
-      });
+      // Применяем анимацию к карточкам, секциям и другим элементам
+      document.querySelectorAll('.card, .experience-item, .section > h2, .section > p, .skill-category')
+        .forEach(el => {
+          // Устанавливаем начальные стили (прозрачность и смещение)
+          Object.assign(el.style, {
+            opacity: '0',
+            transform: 'translateY(20px)',
+            transition: 'opacity 0.6s ease, transform 0.6s ease'
+          });
+          // Начинаем наблюдение за элементом
+          observer.observe(el);
+        });
     };
 
+    // Запускаем анимацию с небольшой задержкой
     setTimeout(animateOnScroll, 100);
 
-    // ========================================
-    // Подсказки на тач-устройствах
-    // ========================================
+    // ==================== Подсказки на тач-устройствах ====================
     
-    if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+    // Проверка на наличие тач-устройства
+    if ('ontouchstart' in window || navigator.maxTouchPoints) {
       document.querySelectorAll('.contact-item-wrapper').forEach(wrapper => {
-        let touchTimer = null;
+        let timer = null;
 
-        wrapper.addEventListener('touchstart', (e) => {
-          if (wrapper.querySelector('.copyable')) e.preventDefault();
-          
-          touchTimer = setTimeout(() => {
-            const tooltip = wrapper.querySelector('.tooltip');
-            if (tooltip) {
-              tooltip.style.opacity = '1';
-              tooltip.style.visibility = 'visible';
-              tooltip.style.transform = 'translateX(-50%) translateY(0)';
-            }
-          }, 300);
-        });
-
-        const clearTouchTimer = () => {
-          if (touchTimer) clearTimeout(touchTimer);
-          touchTimer = null;
+        // Показ подсказки при долгом тапе
+        const showTooltip = () => {
+          const tooltip = wrapper.querySelector('.tooltip');
+          if (tooltip) {
+            Object.assign(tooltip.style, {
+              opacity: '1',
+              visibility: 'visible',
+              transform: 'translateX(-50%) translateY(0)'
+            });
+          }
         };
 
-        wrapper.addEventListener('touchend', clearTouchTimer);
-        wrapper.addEventListener('touchmove', clearTouchTimer);
-        wrapper.addEventListener('touchcancel', clearTouchTimer);
+        // Скрытие подсказки
+        const hideTooltip = () => {
+          if (timer) clearTimeout(timer);
+          timer = null;
+        };
+
+        // Обработчик долгого нажатия
+        wrapper.addEventListener('touchstart', e => {
+          if (wrapper.querySelector('.copyable')) e.preventDefault();
+          timer = setTimeout(showTooltip, 300);
+        });
+
+        // Скрытие подсказки при завершении/отмене/сдвиге
+        ['touchend', 'touchmove', 'touchcancel'].forEach(event => {
+          wrapper.addEventListener(event, hideTooltip);
+        });
       });
     }
-  }
+  };
+
+  // Запуск инициализации после загрузки страницы
+  document.readyState === 'loading'
+    ? document.addEventListener('DOMContentLoaded', init)
+    : init();
+
 })();
