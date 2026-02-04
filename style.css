@@ -290,6 +290,51 @@ p {
   margin-top: 1rem;
 }
 
+#skills .card {
+  padding: 1.5rem;
+}
+
+.skill-category + .skill-category {
+  margin-top: 1.8rem;
+  padding-top: 1.5rem;
+  border-top: 1.5px solid #a7a7a7;
+}
+
+
+.skill-category h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  color: var(--text-primary, #2d3748);
+}
+
+.skill-icons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.skill-icons img {
+  border: 5px solid var(--primary);
+  box-shadow: 0 0 30px rgba(210, 80, 230, 0.486);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: contain;
+  background: var(--icon-bg, #f8f9fa);
+  border: 1px solid var(--border-color, #e2e8f0);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  padding: 4px;
+}
+
+.skill-icons img:hover {
+  transform: scale(1.08);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+
 /* ========================================
    СТИЛЬ ДЛЯ КАРТОЧЕК
    ======================================== */
@@ -716,6 +761,12 @@ p {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
+
+  @media (max-width: 768px) {
+  .skill-icons {
+    justify-content: center;
+  }
+}
   
   .card,
   .experience-item {
